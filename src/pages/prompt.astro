@@ -1,0 +1,19 @@
+---
+import { getRequest, startRequest } from "../request";
+
+let reqId = "";
+if (Astro.request.method === "POST") {
+    const formData = await Astro.request.formData();
+    const todo = formData.get("prompt").toString();
+    reqId = await startRequest(todo)
+} else {
+    reqId = Astro.url.searchParams.get("reqId");
+}
+const request = getRequest(reqId);
+---
+
+<span
+    hx-get={`/prompt?reqId=${reqId}`}
+    hx-target="#result"
+    hx-trigger={request.pending ? "load delay:50ms" : ""}
+>{request.completion}</span>

@@ -13,25 +13,25 @@ import Button from '../components/Button.astro';
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Astro + TailwindCSS</title>
+		<script src="/htmx.js" is:inline></script>
 	</head>
 
 	<body>
-	<div class="flex">
-		<div>
-			<form>
-				<div>
-					<label htmlFor="todo"> Enter Your Todo:
-						<input id="todo" type="text" name="todo" placeholder="Prompt" value=""/>
+	<div class="container mx-auto">
+		<div class="flex flex-col justify-items-center items-center my-10">
+			<div>
+				<form hx-post="/prompt" hx-target="#result">
+					<label htmlFor="prompt"> Give information about :
+						<input id="prompt" type="text" name="prompt" class="py-2 px-4 rounded-lg" placeholder="prompt" value=""/>
 					</label>
+					<Button type="submit">I'm Ready</Button>
+				</form>
+			</div>
 
-				</div>
-				<Button type="submit">Add Todo</Button>
-			</form>
+			<div class="text-sm max-w-prose my-10 p-5 border-2 border-gray-400 rounded-2xl mt-5">
+				<div id="result"></div>
+			</div>
 		</div>
-
-		<div>
-			<h2>My Todo List</h2>
-		</div>
-		</div>
+	</div>
 	</body>
 </html>

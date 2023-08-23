@@ -7,6 +7,7 @@ export const completeWithChatGPT = (
     options: object = {}
 ) => {
     let text = "";
+    console.log(import.meta.env.OPENAI_API_KEY)
     const req = https.request(
         {
             hostname: "api.openai.com",
@@ -15,12 +16,13 @@ export const completeWithChatGPT = (
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+                Authorization: `Bearer ${import.meta.env.OPENAI_API_KEY}`,
             },
         },
         function (res) {
             res.on("data", (chunks) => {
                 for (const chunk of chunks.toString().split("\n")) {
+                    console.log(chunk);
                     if (chunk.toString().startsWith("data: ")) {
                         const data = chunk.toString().replace(/^data: /, "");
                         try {
@@ -30,6 +32,17 @@ export const completeWithChatGPT = (
                                 tokenCallback(text);
                             }
                         } catch (e) {}
+                    } else {
+                        /*
+                        {
+                                "error": {
+                                    "message": "You exceeded your current quota, please check your plan and billing details.",
+                                    "type": "insufficient_quota",
+                                    "param": null,
+                                    "code": "insufficient_quota"
+                                }
+                            }
+                         */
                     }
                 }
             });
